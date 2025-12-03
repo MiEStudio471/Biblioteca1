@@ -1361,4 +1361,359 @@
             }
 
         ];
+
+
+                        
+        // Variables globales
+        const CONTRASENA_ADMIN = "carlosnotelasabes";
+        let siguienteId = libros.length + 1;
+
+        // Elementos del DOM
+        const modalLogin = document.getElementById('modalLogin');
+        const botonLoginAdmin = document.getElementById('botonLoginAdmin');
+        const cancelarLogin = document.getElementById('cancelarLogin');
+        const formularioLogin = document.getElementById('formularioLogin');
+        const passwordInput = document.getElementById('password');
+        const errorPassword = document.getElementById('errorPassword');
+        const dashboard = document.getElementById('dashboard');
+        const cerrarSesion = document.getElementById('cerrarSesion');
+        const seccionesDashboard = document.querySelectorAll('.dashboard-seccion');
+        const enlacesDashboard = document.querySelectorAll('.dashboard-nav a');
+        const contenedorLibros = document.getElementById('contenedorLibros');
+        const formularioAgregarLibro = document.getElementById('formularioAgregarLibro');
+        const cuerpoTablaLibros = document.getElementById('cuerpoTablaLibros');
+        const totalLibros = document.getElementById('totalLibros');
+        const librosGratis = document.getElementById('librosGratis');
+        const librosDestacados = document.getElementById('librosDestacados');
+        const modalPdf = document.getElementById('modalPdf');
+        const visorPdf = document.getElementById('visorPdf');
+        const tituloPdf = document.getElementById('tituloPdf');
+        const descargarPdf = document.getElementById('descargarPdf');
+        const cerrarPdf = document.getElementById('cerrarPdf');
+
+        // Cargar libros desde localStorage si existen
+        function cargarLibrosDesdeStorage() {
+            const librosAlmacenados = localStorage.getItem('libros');
+            if (librosAlmacenados) {
+                libros = JSON.parse(librosAlmacenados);
+                siguienteId = libros.length > 0 ? Math.max(...libros.map(libro => libro.id)) + 1 : 1;
+            }
+        }
+
+        // Guardar libros en localStorage
+        function guardarLibrosEnStorage() {
+            localStorage.setItem('libros', JSON.stringify(libros));
+        }
+
+        // Renderizar libros en la página principal
+        function renderizarLibros() {
+            contenedorLibros.innerHTML = '';
+            
+            libros.forEach((libro, indice) => {
+                const cardLibro = document.createElement('div');
+                cardLibro.className = 'card-libro';
+                cardLibro.innerHTML = `
+                    <div class="card-imagen">
+                        <img src="${libro.imagen}" alt="${libro.titulo}">
+                    </div>
+                    <div class="card-contenido">
+                        <span class="categoria">${libro.categoria}</span>
+                        <h3 class="titulo-libro">${libro.titulo}</h3>
+                        <p class="descripcion-libro">${libro.descripcion}</p>
+                        <div class="info-libro">
+                            <div class="autor">
+                                <i class="fas fa-user"></i> ${libro.autor}
+                            </div>
+                            <div class="paginas">
+                                <i class="fas fa-file-alt"></i> ${libro.paginas} págs.
+                            </div>
+                        </div>
+                        <div class="acciones-libro">
+                            <div class="precio">
+                                <span>${libro.precioOriginal}</span>
+                                ${libro.precio}
+                            </div>
+                            <button class="boton boton-primario leer-btn" data-id="${libro.id}">
+                                <i class="fas fa-book-open"></i> Leer
+                            </button>
+                            <a href="${libro.pdf.replace('/preview', '/view')}" target="_blank" class="boton boton-exito">
+                                <i class="fas fa-download"></i> Descargar
+                            </a>
+                        </div>
+                    </div>
+                `;
+                contenedorLibros.appendChild(cardLibro);
+            });
+            
+            // Agregar event listeners a los botones de leer
+            document.querySelectorAll('.leer-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const libroId = parseInt(this.getAttribute('data-id'));
+                    abrirVisorPdf(libroId);
+                });
+            });
+            
+            // Actualizar estadísticas
+            actualizarEstadisticas();
+        }
+
+        // Abrir visor de PDF
+        function abrirVisorPdf(libroId) {
+            const libro = libros.find(l => l.id === libroId);
+            if (libro) {
+                tituloPdf.textContent = `Leyendo: ${libro.titulo}`;
+                visorPdf.src = libro.pdf;
+                descargarPdf.href = libro.pdf.replace('/preview', '/view');
+                modalPdf.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Cerrar visor de PDF
+        function cerrarVisorPdf() {
+            modalPdf.style.display = 'none';
+            visorPdf.src = '';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Actualizar estadísticas del dashboard
+        function actualizarEstadisticas() {
+            totalLibros.textContent = libros.length;
+            librosGratis.textContent = libros.filter(libro => libro.precio === "Gratis").length;
+            librosDestacados.textContent = libros.filter(libro => libro.precio !== "Gratis").length;
+        }
+
+        // Renderizar tabla de libros en el dashboard
+        function renderizarTablaLibros() {
+            cuerpoTablaLibros.innerHTML = '';
+            
+            libros.forEach(libro => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${libro.id}</td>
+                    <td>${libro.titulo}</td>
+                    <td>${libro.autor}</td>
+                    <td>${libro.categoria}</td>
+                    <td>
+                        <div class="botones-accion">
+                            <button class="boton-editar" onclick="editarLibro(${libro.id})">Editar</button>
+                            <button class="boton-eliminar" onclick="eliminarLibro(${libro.id})">Eliminar</button>
+                        </div>
+                    </td>
+                `;
+                cuerpoTablaLibros.appendChild(fila);
+            });
+        }
+
+        // Mostrar sección del dashboard
+        function mostrarSeccionDashboard(seccionId) {
+            seccionesDashboard.forEach(seccion => {
+                seccion.style.display = seccion.id === seccionId ? 'block' : 'none';
+            });
+            
+            enlacesDashboard.forEach(enlace => {
+                if (enlace.getAttribute('data-seccion') === seccionId) {
+                    enlace.classList.add('activo');
+                } else {
+                    enlace.classList.remove('activo');
+                }
+            });
+            
+            // Si es la sección de gestión, actualizar la tabla
+            if (seccionId === 'gestionar-libros') {
+                renderizarTablaLibros();
+            }
+        }
+
+        // Agregar un nuevo libro
+        function agregarLibro(evento) {
+            evento.preventDefault();
+            
+            const nuevoLibro = {
+                id: siguienteId++,
+                titulo: document.getElementById('tituloLibro').value,
+                autor: document.getElementById('autorLibro').value,
+                categoria: document.getElementById('categoriaLibro').value,
+                descripcion: document.getElementById('descripcionLibro').value,
+                imagen: document.getElementById('imagenLibro').value,
+                pdf: document.getElementById('pdfLibro').value,
+                paginas: parseInt(document.getElementById('paginasLibro').value) || 150,
+                precio: "Gratis",
+                precioOriginal: "$" + (Math.floor(Math.random() * 20) + 15) + ".99"
+            };
+            
+            // Asegurar formato correcto para Google Drive
+            if (nuevoLibro.pdf.includes('drive.google.com') && !nuevoLibro.pdf.includes('/preview')) {
+                if (nuevoLibro.pdf.includes('/view')) {
+                    nuevoLibro.pdf = nuevoLibro.pdf.replace('/view', '/preview');
+                } else if (nuevoLibro.pdf.includes('/file/d/')) {
+                    const fileId = nuevoLibro.pdf.match(/\/file\/d\/([^/]+)/)[1];
+                    nuevoLibro.pdf = `https://drive.google.com/file/d/${fileId}/preview`;
+                }
+            }
+            
+            libros.push(nuevoLibro);
+            guardarLibrosEnStorage();
+            renderizarLibros();
+            renderizarTablaLibros();
+            actualizarEstadisticas();
+            
+            // Resetear formulario
+            formularioAgregarLibro.reset();
+            
+            // Mostrar mensaje de éxito
+            alert('¡Libro agregado exitosamente!');
+            
+            // Cambiar a la sección de gestión
+            mostrarSeccionDashboard('gestionar-libros');
+        }
+
+        // Editar libro
+        function editarLibro(id) {
+            const libro = libros.find(l => l.id === id);
+            if (libro) {
+                if (confirm(`¿Editar el libro "${libro.titulo}"?`)) {
+                    const nuevoTitulo = prompt("Nuevo título:", libro.titulo);
+                    if (nuevoTitulo) {
+                        libro.titulo = nuevoTitulo;
+                        const nuevoAutor = prompt("Nuevo autor:", libro.autor);
+                        if (nuevoAutor) libro.autor = nuevoAutor;
+                        const nuevaCategoria = prompt("Nueva categoría:", libro.categoria);
+                        if (nuevaCategoria) libro.categoria = nuevaCategoria;
+                        guardarLibrosEnStorage();
+                        renderizarLibros();
+                        renderizarTablaLibros();
+                        alert('¡Libro actualizado exitosamente!');
+                    }
+                }
+            }
+        }
+
+        // Eliminar libro
+        function eliminarLibro(id) {
+            const libro = libros.find(l => l.id === id);
+            if (libro) {
+                if (confirm(`¿Estás seguro de eliminar el libro "${libro.titulo}"?`)) {
+                    libros = libros.filter(l => l.id !== id);
+                    guardarLibrosEnStorage();
+                    renderizarLibros();
+                    renderizarTablaLibros();
+                    actualizarEstadisticas();
+                    alert('¡Libro eliminado exitosamente!');
+                }
+            }
+        }
+
+        // Inicializar la aplicación
+        function inicializarApp() {
+            cargarLibrosDesdeStorage();
+            renderizarLibros();
+            
+            // Event Listeners para el login
+            botonLoginAdmin.addEventListener('click', () => {
+                modalLogin.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            cancelarLogin.addEventListener('click', () => {
+                modalLogin.style.display = 'none';
+                passwordInput.value = '';
+                errorPassword.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            formularioLogin.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                if (passwordInput.value === CONTRASENA_ADMIN) {
+                    // Login exitoso
+                    modalLogin.style.display = 'none';
+                    dashboard.style.display = 'flex';
+                    document.querySelector('.cabecera').style.display = 'none';
+                    document.querySelector('.seccion-hero').style.display = 'none';
+                    document.querySelector('.seccion-libros').style.display = 'none';
+                    document.querySelector('.seccion-video').style.display = 'none';
+                    document.querySelector('.pie-pagina').style.display = 'none';
+                    passwordInput.value = '';
+                    errorPassword.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    
+                    // Mostrar la sección de inicio del dashboard
+                    mostrarSeccionDashboard('dashboard-inicio');
+                } else {
+                    // Contraseña incorrecta
+                    errorPassword.style.display = 'block';
+                    passwordInput.value = '';
+                }
+            });
+            
+            // Event Listener para logout
+            cerrarSesion.addEventListener('click', () => {
+                dashboard.style.display = 'none';
+                document.querySelector('.cabecera').style.display = 'block';
+                document.querySelector('.seccion-hero').style.display = 'block';
+                document.querySelector('.seccion-libros').style.display = 'block';
+                document.querySelector('.seccion-video').style.display = 'block';
+                document.querySelector('.pie-pagina').style.display = 'block';
+                location.reload();
+            });
+            
+            // Event Listeners para navegación del dashboard
+            enlacesDashboard.forEach(enlace => {
+                enlace.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const seccionId = enlace.getAttribute('data-seccion');
+                    mostrarSeccionDashboard(seccionId);
+                });
+            });
+            
+            // Event Listener para agregar libro
+            formularioAgregarLibro.addEventListener('submit', agregarLibro);
+            
+            // Event Listeners para PDF viewer
+            cerrarPdf.addEventListener('click', cerrarVisorPdf);
+            
+            // Cerrar modales al hacer clic fuera de ellos
+            window.addEventListener('click', (e) => {
+                if (e.target === modalLogin) {
+                    modalLogin.style.display = 'none';
+                    passwordInput.value = '';
+                    errorPassword.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+                if (e.target === modalPdf) {
+                    cerrarVisorPdf();
+                }
+            });
+            
+            // Mejorar la búsqueda
+            const busquedaInput = document.querySelector('.formulario-busqueda input');
+            const busquedaBoton = document.querySelector('.formulario-busqueda button');
+            
+            busquedaBoton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const termino = busquedaInput.value.toLowerCase();
+                if (termino.length > 0) {
+                    const librosFiltrados = libros.filter(libro => 
+                        libro.titulo.toLowerCase().includes(termino) || 
+                        libro.autor.toLowerCase().includes(termino) ||
+                        libro.categoria.toLowerCase().includes(termino) ||
+                        libro.descripcion.toLowerCase().includes(termino)
+                    );
+                    
+                    // Mostrar resultados
+                    if (librosFiltrados.length > 0) {
+                        alert(`Encontramos ${librosFiltrados.length} libro(s) para "${termino}"`);
+                    } else {
+                        alert(`No encontramos libros para "${termino}". Intenta con otras palabras.`);
+                    }
+                }
+            });
+        }
+
+        // Inicializar cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', inicializarApp);
+    </script>
+</body>
+</html>
       
