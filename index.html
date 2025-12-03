@@ -801,4 +801,326 @@
     </style>
 </head>
 <body>
+                    grid-template-columns: 1fr;
+            }
+            
+            .dashboard-estadisticas {
+                grid-template-columns: 1fr;
+            }
+            
+            .fila-formulario {
+                grid-template-columns: 1fr;
+            }
+            
+            .contenido-pie {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-contenedor {
+                flex-direction: column;
+            }
+            
+            .dashboard-sidebar {
+                width: 100%;
+            }
+            
+            .dashboard-nav ul {
+                display: flex;
+                justify-content: space-around;
+                padding: 10px 0;
+            }
+            
+            .dashboard-nav a {
+                flex-direction: column;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .dashboard-nav i {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-contenido h1 {
+                font-size: 2rem;
+            }
+            
+            .acciones-libro {
+                grid-template-columns: 1fr;
+            }
+            
+            .titulo-seccion, .titulo-video {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+      <!-- Cabecera -->
+    <header class="cabecera">
+        <div class="contenedor cabecera-contenido">
+            <a href="#" class="logo">
+                <div class="logo-icono">
+                    <i class="fas fa-book"></i>
+                </div>
+                <span>Biblioteca</span>
+            </a>
+            
+            <div class="buscador">
+                <form class="formulario-busqueda">
+                    <input type="text" placeholder="Buscar libros ...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            
+            <div class="acciones-usuario">
+                <a href="#">
+                    <i class="fas fa-user"></i>
+                    <span>Cuenta</span>
+                </a>
+                <a href="#" class="enlace-admin" id="botonLoginAdmin">
+                    <i class="fas fa-lock"></i>
+                    <span>Admin</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sección Hero -->
+    <section class="seccion-hero">
+        <div class="contenedor hero-contenido">
+            <h1>Biblioteca</h1>
+            <p>Bienvenido Descubre librosbLéelos directamente en tu navegador o descárgalos gratuitamente.</p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="#libros" class="boton boton-primario">
+                    <i class="fas fa-book-open"></i> Ver Libros
+                </a>
+                <a href="#video" class="boton boton-secundario">
+                    <i class="fas fa-play-circle"></i> Ver Video
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Libros -->
+    <section class="seccion-libros" id="libros">
+        <div class="contenedor">
+            <h2 class="titulo-seccion">Libros  PDF</h2>
+            <div class="grid-libros" id="contenedorLibros">
+                <!-- Los libros se cargarán aquí -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Video -->
+    <section class="seccion-video" id="video">
+        <div class="contenedor">
+            <div class="contenedor-video">
+                <h2 class="titulo-video">Reflexiones </h2>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/hlJ6T03xW-c" 
+                            title="Video espiritual" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+                <p style="margin-top: 20px; color: var(--gris-oscuro);">
+                    Encuentra enseñanzas que complementan tu lectura.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pie-pagina">
+        <div class="contenedor">
+            <div class="contenido-pie">
+                <div class="seccion-pie">
+                    <h3>Biblioteca</h3>
+                    <ul>
+                        <li><a href="#">Acerca de</a></li>
+                        <li><a href="#">Nuestra misión</a></li>
+                        <li><a href="#">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="seccion-pie">
+                    <h3>Ayuda</h3>
+                    <ul>
+                        <li><a href="#">Cómo leer</a></li>
+                        <li><a href="#">Preguntas frecuentes</a></li>
+                        <li><a href="#">Soporte</a></li>
+                    </ul>
+                </div>
+                <div class="seccion-pie">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Términos</a></li>
+                        <li><a href="#">Privacidad</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+                <div class="seccion-pie">
+                    <h3>Síguenos</h3>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-youtube"></i> YouTube</a></li>
+                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Biblioteca . Todos los derechos reservados.char ly</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Login -->
+    <div class="modal" id="modalLogin">
+        <div class="modal-contenido">
+            <div class="modal-cabecera">
+                <h2>Acceso Administrador</h2>
+            </div>
+            <div class="modal-cuerpo">
+                <form id="formularioLogin">
+                    <div class="grupo-formulario">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" placeholder="Ingresa la contraseña" required>
+                        <div class="mensaje-error" id="errorPassword">Contraseña incorrecta</div>
+                    </div>
+                    <div class="acciones-modal">
+                        <button type="button" class="boton boton-secundario" id="cancelarLogin">Cancelar</button>
+                        <button type="submit" class="boton boton-primario">Ingresar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal PDF -->
+    <div class="modal-pdf" id="modalPdf">
+        <div class="modal-pdf-contenido">
+            <div class="modal-pdf-cabecera">
+                <h3 id="tituloPdf">Leyendo libro</h3>
+                <div class="acciones-pdf">
+                    <a href="#" class="boton boton-primario" id="descargarPdf" target="_blank">
+                        <i class="fas fa-download"></i> Descargar
+                    </a>
+                    <button class="boton boton-secundario" id="cerrarPdf">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                </div>
+            </div>
+            <div class="modal-pdf-cuerpo">
+                <iframe class="visor-pdf" id="visorPdf" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard-contenedor" id="dashboard" style="display: none;">
+        <div class="dashboard-sidebar">
+            <div class="dashboard-logo">
+                <h2><i class="fas fa-book"></i> Panel Admin</h2>
+            </div>
+            <nav class="dashboard-nav">
+                <ul>
+                    <li><a href="#" class="activo" data-seccion="dashboard-inicio"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="#" data-seccion="agregar-libro"><i class="fas fa-plus-circle"></i> Agregar Libro</a></li>
+                    <li><a href="#" data-seccion="gestionar-libros"><i class="fas fa-book"></i> Gestionar Libros</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="dashboard-main">
+            <div class="dashboard-cabecera">
+                <h1>Panel de Administración</h1>
+                <button class="boton boton-primario" id="cerrarSesion">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+            
+            <!-- Inicio Dashboard -->
+            <div class="dashboard-seccion" id="dashboard-inicio">
+                <h2>Resumen</h2>
+                <div class="dashboard-estadisticas">
+                    <div class="estadistica-card">
+                        <h3 id="totalLibros">0</h3>
+                        <p>Libros Totales</p>
+                    </div>
+                    <div class="estadistica-card">
+                        <h3 id="librosGratis">0</h3>
+                        <p>Libros Gratuitos</p>
+                    </div>
+                    <div class="estadistica-card">
+                        <h3 id="librosDestacados">0</h3>
+                        <p>Libros Destacados</p>
+                    </div>
+                </div>
+                
+                <div class="contenedor-formulario">
+                    <h3>Bienvenido, Administrador</h3>
+                    <p>Desde este panel puedes agregar nuevos libros espirituales en formato PDF, editar los existentes y eliminarlos.</p>
+                    <p>Usa el menú lateral para navegar entre las diferentes secciones del panel de administración.</p>
+                </div>
+            </div>
+            
+            <!-- Agregar Libro -->
+            <div class="dashboard-seccion" id="agregar-libro" style="display: none;">
+                <h2>Agregar Nuevo Libro</h2>
+                <div class="contenedor-formulario">
+                    <form id="formularioAgregarLibro">
+                        <div class="fila-formulario">
+                            <div class="grupo-formulario">
+                                <label for="tituloLibro">Título *</label>
+                                <input type="text" id="tituloLibro" required>
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="autorLibro">Autor *</label>
+                                <input type="text" id="autorLibro" required>
+                            </div>
+                        </div>
+                        
+                        <div class="fila-formulario">
+                            <div class="grupo-formulario">
+                                <label for="categoriaLibro">Categoría *</label>
+                                <select id="categoriaLibro" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="Casa de Oración">Casa de Oración</option>
+                                    <option value="Cristianismo">Cristianismo</option>
+                                    <option value="Libros Sagrados">Libros Sagrados</option>
+                                    <option value="Filosofía Cristiana">Filosofía Cristiana</option>
+                                    <option value="Espiritualidad">Espiritualidad</option>
+                                </select>
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="paginasLibro">Páginas</label>
+                                <input type="number" id="paginasLibro" value="150">
+                            </div>
+                        </div>
+                        
+                        <div class="grupo-formulario">
+                            <label for="descripcionLibro">Descripción *</label>
+                            <textarea id="descripcionLibro" required></textarea>
+                        </div>
+                        
+                        <div class="fila-formulario">
+                            <div class="grupo-formulario">
+                                <label for="imagenLibro">URL Imagen *</label>
+                                <input type="text" id="imagenLibro" required>
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="pdfLibro">URL PDF *</label>
+                                <input type="text" id="pdfLibro" required>
+                            </div>
+                        </div>
+                        
+                        <div class="acciones-formulario">
+                            <button type="reset" class="boton boton-secundario">Limpiar</button>
+                            <button type="submit" class="boton boton-primario">Agregar Libro</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
       
