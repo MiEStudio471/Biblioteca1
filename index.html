@@ -1066,5 +1066,310 @@
                     </form>
                 </div>
             </div>
+                                            <label for="pdfLibro">URL PDF *</label>
+                                <input type="text" id="pdfLibro" required>
+                            </div>
+                        </div>
+                        
+                        <div class="acciones-formulario">
+                            <button type="reset" class="boton boton-secundario">Limpiar</button>
+                            <button type="submit" class="boton boton-primario">Agregar Libro</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             
+            <!-- Gestionar Libros -->
+            <div class="dashboard-seccion" id="gestionar-libros" style="display: none;">
+                <h2>Gestionar Libros</h2>
+                <div class="tabla-libros">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Categoría</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoTablaLibros">
+                            <!-- Los libros se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos iniciales de libros
+        let libros = [
+            {
+                id: 1,
+                titulo: "Un Cambio Y Arrepentimiento",
+                autor: "Salvador Espinoza",
+                categoria: "Casa de Oración",
+                descripcion: "Como Dios tiene el poder de cambiar la vida del creyente este libro esta echo para las personas ya creyentes",
+                imagen: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                pdf: "https://drive.google.com/file/d/1CvW-laPFVRBQ4KQS4pTGvRsKy3rQf6cd/preview",
+                paginas: 180,
+                precio: "Gratis",
+                precioOriginal: "$24.99"
+            },
+            {
+                id: 2,
+                titulo: "El Progreso del Peregrino",
+                autor: "John Bunyan",
+                categoria: "Cristianismo",
+                descripcion: "Una alegoría cristiana clásica que narra el viaje espiritual de Cristiano desde la Ciudad de Destrucción hasta la Ciudad Celestial.",
+                imagen: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1112&q=80",
+                pdf: "https://drive.google.com/file/d/0B4FtVoTdAhD_U1M3dERRSndodUU/preview",
+                paginas: 328,
+                precio: "Gratis",
+                precioOriginal: "$18.50"
+            },
+            {
+                id: 3,
+                titulo: "El Libro de Enoc",
+                autor: "Enoc",
+                categoria: "Libros Sagrados",
+                descripcion: "Texto apócrifo del Antiguo Testamento atribuido a Enoc, bisabuelo de Noé. Contiene visiones apocalípticas y revelaciones.",
+                imagen: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1178&q=80",
+                pdf: "https://drive.google.com/file/d/0B0s5G4zjU2wAQ0l2X3J4YnJvWFk/preview",
+                paginas: 142,
+                precio: "Gratis",
+                precioOriginal: "$22.99"
+            },
+            {
+                id: 4,
+                titulo: "El Hombre Celestial",
+                autor: "Varios Autores",
+                categoria: "Filosofía Cristiana",
+                descripcion: "Exploración profunda del concepto del hombre celestial en la teología y espiritualidad cristiana, conectando lo humano con lo divino.",
+                imagen: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0Bx1Ge1MvLEq2b1ZyWm8tN0xvc0E/preview",
+                paginas: 210,
+                precio: "Gratis",
+                precioOriginal: "$26.75"
+            },
+            {
+                id: 5,
+                titulo: "Filosofía Cristiana Contemporánea",
+                autor: "Varios Autores",
+                categoria: "Filosofía Cristiana",
+                descripcion: "Reflexiones sobre la fe cristiana en el mundo moderno, abordando temas de ética, existencia y propósito desde una perspectiva bíblica.",
+                imagen: "https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1198&q=80",
+                pdf: "https://drive.google.com/file/d/1CvW-laPFVRBQ4KQS4pTGvRsKy3rQf6cd/preview",
+                paginas: 245,
+                precio: "Gratis",
+                precioOriginal: "$28.50"
+            },
+            {
+                id: 6,
+                titulo: "El arrepentimiento Que Dios Quiere ",
+                autor: "Varios Autores",
+                categoria: "Guia hacia jesus ",
+                descripcion: "Que pide Dios de nosotro como personas y para nuestra vida",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0B29ywDwVU5tmdjhLdUZaMVh1U3c/view?usp=drivesdk&resourcekey=0-1EDCgyrcNZ-lyCtJAqhDYw",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+
+            {
+                id: 6,
+                titulo: "Teologia",
+                autor: "Varios Autores",
+                categoria: "Teologia",
+                descripcion: "Desglosamos la biblia y el estudio para entenderla a profundidad",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0B29ywDwVU5tmdjhLdUZaMVh1U3c/view?usp=drivesdk&resourcekey=0-1EDCgyrcNZ-lyCtJAqhDYw",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "Como conectarse con Dios",
+                autor: "Jhon Macartur",
+                categoria: "como conocer a Dios realmente",
+                descripcion: "Nos hemos olvidado que tenemos un creador y que el quiere conectar con nosotros",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/1e5gaBJK0BaDMGbIEGb1emkuH-tz0Ffrm/view?usp=drivesdk",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "conversacion con Dios",
+                autor: "Varios Autores",
+                categoria: "Verdad",
+                descripcion: "que es lo que realmente somos y coml Dios quiere vernos",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0B5RUtnz0S-o6d1hCSDIzTFNUeEFLNlNzckxGR3FQZnNsdjFV/view?usp=drivesdk&resourcekey=0-_ZXMAn7YVgOyme98T0MBqg",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "El amor de Dios",
+                autor: "Varios Autores",
+                categoria: "para niños pero tmb lo puede leer uno",
+                descripcion: "Su amor incomparable",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/18Jp651bhZGBfZaLMKg4x8kcRyASMsEKA/view?usp=drivesdk",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "Conocer A Jesus es Todo",
+                autor: "Alejandro Bullon",
+                categoria: "Esperanza",
+                descripcion: "Porque deberias conocer a jesus y quien es el y lo que ofrece para nosotros ",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0B1wVPBjpV6j2R2czckVObG9rUlE/view?usp=drivesdk&resourcekey=0-eIl4hbPjyl1twbguJMxaKQ",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "La Creacion",
+                autor: "Varios Autores",
+                categoria: "Creacion",
+                descripcion: "Analisis de la creacion de Dios",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0B115jc86bECCQk1QRU03TFJ1MEk/view?usp=drivesdk&resourcekey=0-jZy0i-bezuXjSxkXnuvUHw",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "El Proceso a Jesus",
+                autor: "Varios Autores",
+                categoria: "guia",
+                descripcion: "El proceso de jesus ",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0Bx4G_Xl7EcKqNzM2NzQxZmQtOTc1ZC00MTU3LTkxMDMtM2Y2ZmI5NWY5Y2Q1/view?usp=drivesdk&resourcekey=0-peMJVUL7--ju1u6bZCmd-Q",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "Los atributos de Dios",
+                autor: "Varios Autores",
+                categoria: "Libros sagrado",
+                descripcion: "Estudio De quien es Dios",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/1Cot8PDMP1fRYX-1R5Z77vJbKPgdZ5fQX/view?usp=drivesdk",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "La Biblia",
+                autor: "Reina valera 2009",
+                categoria: "La verdad",
+                descripcion: "La palabra de Dios y todo lo que existe",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0B9TZ84u2CP6uSDFJMjVFeEZqSk0/view?usp=drivesdk&resourcekey=0-gTvToqpmJxswaXfIw7fLaw",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "La biblia",
+                autor: "Reina valera 1960",
+                categoria: "La verdad",
+                descripcion: "La biblia version 1960 las palabras de Dios",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0Bx1Ge1MvLEq2b0pTamppeU1yUU0/view?usp=drivesdk&resourcekey=0-ffTKz34yWNsDPrgijQGyBw",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "Santa Biblia version internacional",
+                autor: "Varios Autores",
+                categoria: "La verdad",
+                descripcion: "La palabra fiel y verdadera del señor",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0B8gKW3-b_XrbZFFVXzY4Q1JDNDg/view?usp=drivesdk&resourcekey=0-ptjz2KuasWhomVCzGKlk9g",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "muerte y regreso",
+                autor: "Katerine Baxter",
+                categoria: "Vida y muerte que es ?",
+                descripcion: "testimonios de personas que murieron y volvieron a la vida ",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: " https://drive.google.com/file/d/0B_Zf-AX-E8SCcVZwc0VEWFJvUUk/view?usp=drivesdk&resourcekey=0-tUK7QxmB9DRhZacQNNEBdw",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "Despues de la muerte",
+                autor: "Varios Autores",
+                categoria: "la verdad",
+                descripcion: "Que pasa despues de la muerte",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: " https://drive.google.com/file/d/0B8KjT13zhZkscGdmRlJpNGpVUlE/view?usp=drivesdk&resourcekey=0-Ok9IO8sGz0Lyi-UKUJxtQw",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "Sabiduría para la Vida Diaria",
+                autor: "Varios Autores",
+                categoria: "Espiritualidad",
+                descripcion: "Una colección de enseñanzas prácticas para aplicar principios espirituales en la vida cotidiana y alcanzar plenitud personal.",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://drive.google.com/file/d/0B4FtVoTdAhD_U1M3dERRSndodUU/preview",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "La verdad",
+                autor: "Varios Autores",
+                categoria: "la verdad te ara libre",
+                descripcion:"Que es la verdad, la verdad es jesus",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: "https://docs.google.com/document/d/0Bww-t6SF_CkZeS1YWjg2MU9IM3c/edit?usp=drivesdk&ouid=103994019010567734992&resourcekey=0-n7flpkXwY2fQKyppl-nVcQ&rtpof=true&sd=true",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            },
+            {
+                id: 6,
+                titulo: "Promesas De Dios",
+                autor: "Varios Autores",
+                categoria: "promesas",
+                descripcion: "Promesas De Dios para nosotros",
+                imagen: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+                pdf: " https://drive.google.com/file/d/1mlwmKLF-oXiyV0o9a_l3efn-G-AnCB1j/view?usp=drivesdk",
+                paginas: 192,
+                precio: "Gratis",
+                precioOriginal: "$21.99"
+            }
+
+        ];
       
