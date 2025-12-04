@@ -1362,7 +1362,7 @@
                         
         // Variables globales
         const CONTRASENA_ADMIN = "carlosnotelasabes";
-        let siguienteId = libros.length + 1;
+        let siguienteId = 24; // Porque ya tenemos 22 libros 
 
         // Elementos del DOM
         const modalLogin = document.getElementById('modalLogin');
@@ -1471,7 +1471,7 @@
             visorPdf.src = '';
             document.body.style.overflow = 'auto';
         }
-
+ 
         // Actualizar estadísticas del dashboard
         function actualizarEstadisticas() {
             totalLibros.textContent = libros.length;
